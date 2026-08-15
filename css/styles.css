@@ -134,6 +134,30 @@ body {
   color: #ffffff;
 }
 
+#mensaje-validacion {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  max-width: 360px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #1f2937;
+  color: #ffffff;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 20;
+  white-space: pre-line;
+}
+
+#mensaje-validacion.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .estado-actual {
   margin-top: 10px;
   font-size: 0.8rem;

@@ -16,6 +16,7 @@ async function cargarMaterias() {
 
 const estadosAcademicos = {};
 const STORAGE_KEY = 'career-progress-estados';
+let materiasDelPlan = [];
 
 function obtenerTextoEstado(estado) {
   switch (estado) {
@@ -47,6 +48,84 @@ function guardarEstadosEnLocalStorage() {
   }
 }
 
+function obtenerMateriaPorId(materiaId) {
+  return materiasDelPlan.find((materia) => materia.id === materiaId) || null;
+}
+
+function obtenerMateriasDependientes(materiaId) {
+  return materiasDelPlan.filter((materia) => {
+    const correlativas = Array.isArray(materia.correlativas) ? materia.correlativas : [];
+    return correlativas.includes(materiaId);
+  });
+}
+
+function formatearListaNombres(lista) {
+  if (!lista.length) {
+    return '';
+  }
+
+  if (lista.length === 1) {
+    return lista[0];
+  }
+
+  if (lista.length === 2) {
+    return `${lista[0]} y ${lista[1]}`;
+  }
+
+  return `${lista.slice(0, -1).join(', ')}, y ${lista[lista.length - 1]}`;
+}
+
+function construirMensajeCorrelativas(materia, nuevoEstado, faltantes) {
+  const nombres = faltantes
+    .map((id) => obtenerMateriaPorId(id)?.nombre || id)
+    .filter(Boolean);
+
+  if (!nombres.length) {
+    return '';
+  }
+
+  const listaFormateada = formatearListaNombres(nombres);
+
+  if (nuevoEstado === 'aprobada') {
+    return faltantes.length === 1
+      ? `Para aprobar ${materia.nombre} necesitás tener aprobada: ${listaFormateada}.`
+      : `Para aprobar ${materia.nombre} necesitás tener aprobadas:\n${listaFormateada}.`;
+  }
+
+  return faltantes.length === 1
+    ? `Para regularizar ${materia.nombre} necesitás tener regular o aprobada: ${listaFormateada}.`
+    : `Para regularizar ${materia.nombre} necesitás tener regular o aprobada:\n${listaFormateada}.`;
+}
+
+function construirMensajeDependencias(materia, nuevoEstado, dependientes) {
+  const nombres = dependientes.map((dependiente) => dependiente.nombre);
+  const listaFormateada = formatearListaNombres(nombres);
+
+  if (nuevoEstado === 'no-cursada') {
+    return `No podés cambiar ${materia.nombre} a No cursada porque invalidaría:\n${listaFormateada}.`;
+  }
+
+  return `No podés cambiar ${materia.nombre} a ${obtenerTextoEstado(nuevoEstado)} porque ${listaFormateada} necesita${nombres.length > 1 ? 'n' : ''} tenerla ${nuevoEstado === 'regular' ? 'regular o aprobada' : 'aprobada'}.`;
+}
+
+function mostrarMensajeValidacion(mensaje) {
+  let contenedor = document.getElementById('mensaje-validacion');
+
+  if (!contenedor) {
+    contenedor = document.createElement('div');
+    contenedor.id = 'mensaje-validacion';
+    document.body.prepend(contenedor);
+  }
+
+  contenedor.textContent = mensaje;
+  contenedor.classList.add('visible');
+
+  clearTimeout(mostrarMensajeValidacion.timeoutId);
+  mostrarMensajeValidacion.timeoutId = setTimeout(() => {
+    contenedor.classList.remove('visible');
+  }, 4500);
+}
+
 function inicializarEstados(materias) {
   const estadosGuardados = cargarEstadosGuardados();
 
@@ -60,8 +139,84 @@ function inicializarEstados(materias) {
   });
 }
 
+function puedeCambiarEstado(materiaId, nuevoEstado) {
+  const materia = obtenerMateriaPorId(materiaId);
+
+  if (!materia) {
+    return { valido: false, motivo: 'La materia seleccionada no existe.', faltantes: [] };
+  }
+
+  if (nuevoEstado === estadosAcademicos[materiaId]) {
+    return { valido: true, motivo: '', faltantes: [] };
+  }
+
+  const correlativas = Array.isArray(materia.correlativas) ? materia.correlativas : [];
+
+  if (nuevoEstado === 'regular') {
+    const faltantes = correlativas.filter((correlativaId) => {
+      const estadoCorrelativa = estadosAcademicos[correlativaId];
+      return !['regular', 'aprobada'].includes(estadoCorrelativa);
+    });
+
+    if (faltantes.length) {
+      return {
+        valido: false,
+        motivo: construirMensajeCorrelativas(materia, nuevoEstado, faltantes),
+        faltantes
+      };
+    }
+  }
+
+  if (nuevoEstado === 'aprobada') {
+    const faltantes = correlativas.filter((correlativaId) => {
+      return estadosAcademicos[correlativaId] !== 'aprobada';
+    });
+
+    if (faltantes.length) {
+      return {
+        valido: false,
+        motivo: construirMensajeCorrelativas(materia, nuevoEstado, faltantes),
+        faltantes
+      };
+    }
+  }
+
+  const materiasDependientes = obtenerMateriasDependientes(materiaId);
+
+  const conflictos = materiasDependientes.filter((materiaDependiente) => {
+    const estadoDependiente = estadosAcademicos[materiaDependiente.id];
+
+    if (estadoDependiente === 'regular') {
+      return !['regular', 'aprobada'].includes(nuevoEstado);
+    }
+
+    if (estadoDependiente === 'aprobada') {
+      return nuevoEstado !== 'aprobada';
+    }
+
+    return false;
+  });
+
+  if (conflictos.length) {
+    return {
+      valido: false,
+      motivo: construirMensajeDependencias(materia, nuevoEstado, conflictos),
+      faltantes: conflictos.map((dependiente) => dependiente.id)
+    };
+  }
+
+  return { valido: true, motivo: '', faltantes: [] };
+}
+
 function actualizarEstadoMateria(idMateria, nuevoEstado) {
   if (!estadosAcademicos[idMateria]) {
+    return;
+  }
+
+  const validacion = puedeCambiarEstado(idMateria, nuevoEstado);
+
+  if (!validacion.valido) {
+    mostrarMensajeValidacion(validacion.motivo);
     return;
   }
 
@@ -170,6 +325,7 @@ function renderizarMaterias(materias) {
 
 cargarMaterias()
   .then((materias) => {
+    materiasDelPlan = materias;
     inicializarEstados(materias);
     renderizarMaterias(materias);
     console.log(`Materias cargadas: ${materias.length}`);
