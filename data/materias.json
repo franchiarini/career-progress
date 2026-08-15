@@ -1,0 +1,426 @@
+[
+  {
+    "id": "algebra-y-geometria-analitica",
+    "codigo": "002104",
+    "nombre": "Álgebra y Geometría Analítica",
+    "anio": 1,
+    "tipo": "obligatoria",
+    "correlativas": []
+  },
+  {
+    "id": "analisis-matematico-i",
+    "codigo": "002105",
+    "nombre": "Análisis Matemático I",
+    "anio": 1,
+    "tipo": "obligatoria",
+    "correlativas": []
+  },
+  {
+    "id": "paradigmas-de-programacion-i",
+    "codigo": "002204",
+    "nombre": "Paradigmas de Programación I",
+    "anio": 1,
+    "tipo": "obligatoria",
+    "correlativas": []
+  },
+  {
+    "id": "tecnologia-de-computadoras",
+    "codigo": "002256",
+    "nombre": "Tecnología de Computadoras",
+    "anio": 1,
+    "tipo": "obligatoria",
+    "correlativas": []
+  },
+  {
+    "id": "organizacion-empresarial-e-industrial",
+    "codigo": "002203",
+    "nombre": "Organización Empresarial e Industrial",
+    "anio": 1,
+    "tipo": "obligatoria",
+    "correlativas": []
+  },
+  {
+    "id": "fisica-i",
+    "codigo": "002154",
+    "nombre": "Física I",
+    "anio": 1,
+    "tipo": "obligatoria",
+    "correlativas": []
+  },
+  {
+    "id": "tecnicas-de-desarrollo",
+    "codigo": "002251",
+    "nombre": "Técnicas de Desarrollo",
+    "anio": 1,
+    "tipo": "obligatoria",
+    "correlativas": []
+  },
+  {
+    "id": "sistemas-de-informacion",
+    "codigo": "002234",
+    "nombre": "Sistemas de Información",
+    "anio": 1,
+    "tipo": "obligatoria",
+    "correlativas": []
+  },
+  {
+    "id": "ingenieria-sociedad-estado-y-defensa-nacional",
+    "codigo": "002173",
+    "nombre": "Ingeniería, Sociedad, Estado y Defensa Nacional",
+    "anio": 1,
+    "tipo": "obligatoria",
+    "correlativas": []
+  },
+  {
+    "id": "analisis-matematico-ii",
+    "codigo": "002106",
+    "nombre": "Análisis Matemático II",
+    "anio": 2,
+    "tipo": "obligatoria",
+    "correlativas": ["analisis-matematico-i"]
+  },
+  {
+    "id": "estructuras-de-datos-y-algoritmos",
+    "codigo": "002148",
+    "nombre": "Estructuras de Datos y Algoritmos",
+    "anio": 2,
+    "tipo": "obligatoria",
+    "correlativas": ["paradigmas-de-programacion-i"]
+  },
+  {
+    "id": "fisica-ii",
+    "codigo": "002156",
+    "nombre": "Física II",
+    "anio": 2,
+    "tipo": "obligatoria",
+    "correlativas": ["fisica-i", "analisis-matematico-i"]
+  },
+  {
+    "id": "matematica-discreta",
+    "codigo": "002189",
+    "nombre": "Matemática Discreta",
+    "anio": 2,
+    "tipo": "obligatoria",
+    "correlativas": ["algebra-y-geometria-analitica"]
+  },
+  {
+    "id": "arquitectura-de-computadoras",
+    "codigo": "002110",
+    "nombre": "Arquitectura de Computadoras",
+    "anio": 2,
+    "tipo": "obligatoria",
+    "correlativas": ["tecnologia-de-computadoras"]
+  },
+  {
+    "id": "bases-de-datos-i",
+    "codigo": "002115",
+    "nombre": "Bases de Datos I",
+    "anio": 2,
+    "tipo": "obligatoria",
+    "correlativas": ["paradigmas-de-programacion-i"]
+  },
+  {
+    "id": "probabilidad-y-estadistica",
+    "codigo": "002208",
+    "nombre": "Probabilidad y Estadística",
+    "anio": 2,
+    "tipo": "obligatoria",
+    "correlativas": ["analisis-matematico-i"]
+  },
+  {
+    "id": "fisica-iii",
+    "codigo": "002157",
+    "nombre": "Física III",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["fisica-ii", "analisis-matematico-ii"]
+  },
+  {
+    "id": "ingenieria-de-requerimientos",
+    "codigo": "002170",
+    "nombre": "Ingeniería de Requerimientos",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["sistemas-de-informacion", "paradigmas-de-programacion-i"]
+  },
+  {
+    "id": "taller-de-integracion-i",
+    "codigo": "002247",
+    "nombre": "Taller de Integración I",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["tecnicas-de-desarrollo", "ingenieria-de-requerimientos", "paradigmas-de-programacion-ii"]
+  },
+  {
+    "id": "paradigmas-de-programacion-ii",
+    "codigo": "002205",
+    "nombre": "Paradigmas de Programación II",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["paradigmas-de-programacion-i"]
+  },
+  {
+    "id": "sistemas-de-comunicaciones",
+    "codigo": "002231",
+    "nombre": "Sistemas de Comunicaciones",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["fisica-iii"]
+  },
+  {
+    "id": "procesos-de-software-i",
+    "codigo": "002212",
+    "nombre": "Procesos de Software I",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["paradigmas-de-programacion-ii", "ingenieria-de-requerimientos"]
+  },
+  {
+    "id": "teoria-de-la-computacion",
+    "codigo": "002265",
+    "nombre": "Teoría de la Computación",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["matematica-discreta"]
+  },
+  {
+    "id": "sistemas-operativos",
+    "codigo": "002242",
+    "nombre": "Sistemas Operativos",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["arquitectura-de-computadoras"]
+  },
+  {
+    "id": "paradigmas-de-programacion-iii",
+    "codigo": "002206",
+    "nombre": "Paradigmas de Programación III",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["matematica-discreta"]
+  },
+  {
+    "id": "analisis-y-calculo-numerico",
+    "codigo": "002109",
+    "nombre": "Análisis y Cálculo Numérico",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["algebra-y-geometria-analitica", "analisis-matematico-ii"]
+  },
+  {
+    "id": "desarrollo-web-seguro",
+    "codigo": "002127",
+    "nombre": "Desarrollo Web Seguro",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["ingenieria-de-requerimientos", "paradigmas-de-programacion-ii"]
+  },
+  {
+    "id": "ingles-para-ingenieria",
+    "codigo": "002174",
+    "nombre": "Inglés para Ingeniería",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": []
+  },
+  {
+    "id": "procesos-de-software-ii",
+    "codigo": "002213",
+    "nombre": "Procesos de Software II",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["procesos-de-software-i"]
+  },
+  {
+    "id": "bases-de-datos-ii",
+    "codigo": "002116",
+    "nombre": "Bases de Datos II",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["bases-de-datos-i", "estructuras-de-datos-y-algoritmos"]
+  },
+  {
+    "id": "taller-de-integracion-ii",
+    "codigo": "002248",
+    "nombre": "Taller de Integración II",
+    "anio": 3,
+    "tipo": "obligatoria",
+    "correlativas": ["desarrollo-web-seguro", "taller-de-integracion-i", "procesos-de-software-i"]
+  },
+  {
+    "id": "desarrollo-de-herramientas-de-software",
+    "codigo": "002126",
+    "nombre": "Desarrollo de Herramientas de Software",
+    "anio": 3,
+    "tipo": "electiva",
+    "correlativas": ["arquitectura-de-computadoras"]
+  },
+  {
+    "id": "taller-de-integracion-iii",
+    "codigo": "002249",
+    "nombre": "Taller de Integración III",
+    "anio": 4,
+    "tipo": "obligatoria",
+    "correlativas": ["sistemas-de-comunicaciones", "taller-de-integracion-ii"]
+  },
+  {
+    "id": "identificacion-formulacion-evaluacion-y-gestion-de-proyectos-de-ingenieria",
+    "codigo": "002168",
+    "nombre": "Identificación, Formulación, Evaluación y Gestión de Proyectos de Ingeniería",
+    "anio": 4,
+    "tipo": "obligatoria",
+    "correlativas": ["organizacion-empresarial-e-industrial"]
+  },
+  {
+    "id": "modelos-y-simulacion",
+    "codigo": "002200",
+    "nombre": "Modelos y Simulación",
+    "anio": 4,
+    "tipo": "obligatoria",
+    "correlativas": ["probabilidad-y-estadistica", "analisis-y-calculo-numerico"]
+  },
+  {
+    "id": "ingenieria-web",
+    "codigo": "002172",
+    "nombre": "Ingeniería Web",
+    "anio": 4,
+    "tipo": "obligatoria",
+    "correlativas": ["desarrollo-web-seguro", "procesos-de-software-ii"]
+  },
+  {
+    "id": "desarrollo-de-aplicaciones-moviles",
+    "codigo": "002125",
+    "nombre": "Desarrollo de Aplicaciones Móviles",
+    "anio": 4,
+    "tipo": "obligatoria",
+    "correlativas": ["desarrollo-web-seguro", "sistemas-operativos"]
+  },
+  {
+    "id": "legislacion-para-ingenieria",
+    "codigo": "002183",
+    "nombre": "Legislación para Ingeniería",
+    "anio": 4,
+    "tipo": "obligatoria",
+    "correlativas": ["ingenieria-sociedad-estado-y-defensa-nacional"]
+  },
+  {
+    "id": "gestion-de-proyectos-tic",
+    "codigo": "002164",
+    "nombre": "Gestión de Proyectos TIC",
+    "anio": 4,
+    "tipo": "obligatoria",
+    "correlativas": ["procesos-de-software-ii", "organizacion-empresarial-e-industrial"]
+  },
+  {
+    "id": "redes-de-transmision-de-datos",
+    "codigo": "002227",
+    "nombre": "Redes de Transmisión de Datos",
+    "anio": 4,
+    "tipo": "electiva",
+    "correlativas": ["sistemas-de-comunicaciones"]
+  },
+  {
+    "id": "blockchain-y-contratos-inteligentes",
+    "codigo": "002117",
+    "nombre": "Blockchain y Contratos Inteligentes",
+    "anio": 4,
+    "tipo": "electiva",
+    "correlativas": ["desarrollo-web-seguro"]
+  },
+  {
+    "id": "computacion-grafica",
+    "codigo": "002120",
+    "nombre": "Computación Gráfica",
+    "anio": 4,
+    "tipo": "electiva",
+    "correlativas": ["desarrollo-web-seguro"]
+  },
+  {
+    "id": "sistemas-embebidos",
+    "codigo": "002238",
+    "nombre": "Sistemas Embebidos",
+    "anio": 4,
+    "tipo": "electiva",
+    "correlativas": ["sistemas-de-comunicaciones", "arquitectura-de-computadoras"]
+  },
+  {
+    "id": "proyecto-integrador",
+    "codigo": "002219",
+    "nombre": "Proyecto Integrador",
+    "anio": 5,
+    "tipo": "proyecto-final",
+    "correlativas": []
+  },
+  {
+    "id": "inteligencia-artificial",
+    "codigo": "002176",
+    "nombre": "Inteligencia Artificial",
+    "anio": 5,
+    "tipo": "obligatoria",
+    "correlativas": ["probabilidad-y-estadistica", "paradigmas-de-programacion-iii"]
+  },
+  {
+    "id": "taller-de-integracion-iv",
+    "codigo": "002250",
+    "nombre": "Taller de Integración IV",
+    "anio": 5,
+    "tipo": "obligatoria",
+    "correlativas": ["taller-de-integracion-iii", "ingenieria-web"]
+  },
+  {
+    "id": "economia-para-ingenieria",
+    "codigo": "002134",
+    "nombre": "Economía para Ingeniería",
+    "anio": 5,
+    "tipo": "obligatoria",
+    "correlativas": ["identificacion-formulacion-evaluacion-y-gestion-de-proyectos-de-ingenieria"]
+  },
+  {
+    "id": "seguridad-informatica",
+    "codigo": "002229",
+    "nombre": "Seguridad Informática",
+    "anio": 5,
+    "tipo": "obligatoria",
+    "correlativas": ["redes-de-transmision-de-datos", "sistemas-operativos"]
+  },
+  {
+    "id": "calidad-de-software",
+    "codigo": "002118",
+    "nombre": "Calidad de Software",
+    "anio": 5,
+    "tipo": "obligatoria",
+    "correlativas": ["procesos-de-software-ii"]
+  },
+  {
+    "id": "auditoria-e-informatica-forense",
+    "codigo": "002111",
+    "nombre": "Auditoría e Informática Forense",
+    "anio": 5,
+    "tipo": "obligatoria",
+    "correlativas": ["ingenieria-web", "legislacion-para-ingenieria"]
+  },
+  {
+    "id": "practica-profesional-supervisada",
+    "codigo": "002270",
+    "nombre": "Práctica Profesional Supervisada",
+    "anio": 5,
+    "tipo": "practica-profesional",
+    "correlativas": []
+  },
+  {
+    "id": "sistemas-en-tiempo-real",
+    "codigo": "002239",
+    "nombre": "Sistemas en Tiempo Real",
+    "anio": 5,
+    "tipo": "electiva",
+    "correlativas": ["sistemas-embebidos"]
+  },
+  {
+    "id": "pruebas-de-sistemas-informaticos",
+    "codigo": "002222",
+    "nombre": "Pruebas de Sistemas Informáticos",
+    "anio": 5,
+    "tipo": "electiva",
+    "correlativas": ["procesos-de-software-ii"]
+  }
+]
