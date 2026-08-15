@@ -59,6 +59,7 @@ body {
   background: #f9fbff;
   padding: 14px 16px;
   min-height: 120px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .materia-card h3 {
@@ -96,6 +97,74 @@ body {
 .materia-tipo.proyecto-final {
   background: #dbeafe;
   color: #1d4ed8;
+}
+
+.selector-estado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.estado-btn {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #374151;
+  padding: 6px 8px;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.estado-btn[data-estado="no-cursada"].active {
+  background: #64748b;
+  border-color: #64748b;
+  color: #ffffff;
+}
+
+.estado-btn[data-estado="regular"].active {
+  background: #f59e0b;
+  border-color: #f59e0b;
+  color: #ffffff;
+}
+
+.estado-btn[data-estado="aprobada"].active {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff;
+}
+
+.estado-actual {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.materia-card.no-cursada {
+  border-left: 4px solid #94a3b8;
+}
+
+.materia-card.regular {
+  border-left: 4px solid #f59e0b;
+  background: #fff7ed;
+}
+
+.materia-card.aprobada {
+  border-left: 4px solid #16a34a;
+  background: #f0fdf4;
+}
+
+.materia-card.no-cursada .estado-actual {
+  color: #475569;
+}
+
+.materia-card.regular .estado-actual {
+  color: #b45309;
+}
+
+.materia-card.aprobada .estado-actual {
+  color: #166534;
 }
 
 @media (max-width: 640px) {
