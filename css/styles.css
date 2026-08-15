@@ -1,0 +1,109 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f3f6fb;
+  color: #1f2937;
+}
+
+.site-header {
+  padding: 24px 20px 12px;
+  text-align: center;
+  background: #ffffff;
+  border-bottom: 1px solid #dfe7f5;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.site-header p {
+  margin: 8px 0 0;
+  color: #4b5563;
+  font-size: 1rem;
+}
+
+.malla-cursos {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: grid;
+  gap: 20px;
+}
+
+.anio-seccion {
+  background: #ffffff;
+  border: 1px solid #dfe7f5;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.anio-seccion h2 {
+  margin: 0 0 16px;
+  font-size: 1.4rem;
+}
+
+.materias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.materia-card {
+  border: 1px solid #dfe7f5;
+  border-radius: 10px;
+  background: #f9fbff;
+  padding: 14px 16px;
+  min-height: 120px;
+}
+
+.materia-card h3 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.materia-anio {
+  margin: 0 0 8px;
+  color: #6b7280;
+  font-size: 0.82rem;
+}
+
+.materia-tipo {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.materia-card.electiva {
+  border-color: #d9bf77;
+  background: #fffaf0;
+}
+
+.materia-tipo.electiva {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.materia-tipo.practica-profesional,
+.materia-tipo.proyecto-final {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+@media (max-width: 640px) {
+  .malla-cursos {
+    padding: 14px;
+  }
+
+  .anio-seccion {
+    padding: 16px;
+  }
+}
