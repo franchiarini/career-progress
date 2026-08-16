@@ -250,6 +250,40 @@ function actualizarDisponibilidadEnTarjetas() {
   });
 }
 
+function actualizarDashboard() {
+  const contenedor = document.getElementById('dashboard-container');
+
+  if (!contenedor) {
+    return;
+  }
+
+  const totalMaterias = materiasDelPlan.length;
+  const aprobadas = Object.values(estadosAcademicos).filter((estado) => estado === 'aprobada').length;
+  const regulares = Object.values(estadosAcademicos).filter((estado) => estado === 'regular').length;
+  const noCursadas = Object.values(estadosAcademicos).filter((estado) => estado === 'no-cursada').length;
+  const porcentaje = totalMaterias ? Math.round((aprobadas / totalMaterias) * 100) : 0;
+
+  contenedor.innerHTML = `
+    <section class="dashboard" aria-label="Progreso académico">
+      <div class="dashboard-header">
+        <h2>Progreso de la carrera</h2>
+        <span class="dashboard-porcentaje">${porcentaje}%</span>
+      </div>
+
+      <div class="progress-bar" aria-hidden="true">
+        <span class="progress-fill" style="width: ${porcentaje}%"></span>
+      </div>
+
+      <div class="dashboard-stats">
+        <div class="stat-item"><span>Aprobadas:</span> <strong>${aprobadas}</strong></div>
+        <div class="stat-item"><span>Regulares:</span> <strong>${regulares}</strong></div>
+        <div class="stat-item"><span>No cursadas:</span> <strong>${noCursadas}</strong></div>
+        <div class="stat-item"><span>Total:</span> <strong>${totalMaterias}</strong></div>
+      </div>
+    </section>
+  `;
+}
+
 function mostrarMensajeValidacion(mensaje) {
   let contenedor = document.getElementById('mensaje-validacion');
 
@@ -385,6 +419,7 @@ function actualizarEstadoMateria(idMateria, nuevoEstado) {
   });
 
   actualizarDisponibilidadEnTarjetas();
+  actualizarDashboard();
 }
 
 function renderizarMaterias(materias) {
@@ -463,6 +498,7 @@ function renderizarMaterias(materias) {
 
   contenedor.innerHTML = seccionesHTML;
   actualizarDisponibilidadEnTarjetas();
+  actualizarDashboard();
 
   contenedor.querySelectorAll('.estado-btn').forEach((boton) => {
     boton.addEventListener('click', (event) => {

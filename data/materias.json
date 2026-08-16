@@ -139,7 +139,7 @@
     "id": "ingenieria-de-requerimientos",
     "codigo": "002170",
     "nombre": "Ingeniería de Requerimientos",
-    "anio": 3,
+    "anio": 2,
     "tipo": "obligatoria",
     "correlativas": ["sistemas-de-informacion", "paradigmas-de-programacion-i"]
   },
@@ -155,7 +155,7 @@
     "id": "paradigmas-de-programacion-ii",
     "codigo": "002205",
     "nombre": "Paradigmas de Programación II",
-    "anio": 3,
+    "anio": 2,
     "tipo": "obligatoria",
     "correlativas": ["paradigmas-de-programacion-i"]
   },
