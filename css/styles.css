@@ -165,6 +165,46 @@ body {
   color: #374151;
 }
 
+.disponibilidad-indicador {
+  margin-top: 10px;
+  border-radius: 8px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+
+.disponibilidad-indicador.bloqueada {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.disponibilidad-indicador.habilitada {
+  background: #ecfdf5;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.disponibilidad-indicador.pendiente {
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #9a5b00;
+}
+
+.disponibilidad-titulo,
+.disponibilidad-detalle {
+  display: block;
+}
+
+.disponibilidad-titulo {
+  font-weight: 700;
+}
+
+.disponibilidad-detalle {
+  margin-top: 4px;
+}
+
 .materia-card.no-cursada {
   border-left: 4px solid #94a3b8;
 }

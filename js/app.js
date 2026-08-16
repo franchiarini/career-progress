@@ -59,6 +59,60 @@ function obtenerMateriasDependientes(materiaId) {
   });
 }
 
+function obtenerCorrelativas(materia) {
+  return Array.isArray(materia?.correlativas) ? materia.correlativas : [];
+}
+
+function obtenerCorrelativasFaltantes(materiaId, requisito) {
+  const materia = obtenerMateriaPorId(materiaId);
+
+  if (!materia) {
+    return [];
+  }
+
+  const correlativas = obtenerCorrelativas(materia);
+
+  if (!correlativas.length) {
+    return [];
+  }
+
+  return correlativas.filter((correlativaId) => {
+    const estadoCorrelativa = estadosAcademicos[correlativaId];
+
+    if (requisito === 'cursar') {
+      return !['regular', 'aprobada'].includes(estadoCorrelativa);
+    }
+
+    if (requisito === 'aprobar') {
+      return estadoCorrelativa !== 'aprobada';
+    }
+
+    return false;
+  });
+}
+
+function puedeCursarMateria(materiaId) {
+  const materia = obtenerMateriaPorId(materiaId);
+
+  if (!materia) {
+    return { puedeCursar: false, faltantes: [] };
+  }
+
+  const faltantes = obtenerCorrelativasFaltantes(materiaId, 'cursar');
+  return { puedeCursar: faltantes.length === 0, faltantes };
+}
+
+function puedeAprobarMateria(materiaId) {
+  const materia = obtenerMateriaPorId(materiaId);
+
+  if (!materia) {
+    return { puedeAprobar: false, faltantes: [] };
+  }
+
+  const faltantes = obtenerCorrelativasFaltantes(materiaId, 'aprobar');
+  return { puedeAprobar: faltantes.length === 0, faltantes };
+}
+
 function formatearListaNombres(lista) {
   if (!lista.length) {
     return '';
@@ -108,6 +162,94 @@ function construirMensajeDependencias(materia, nuevoEstado, dependientes) {
   return `No podés cambiar ${materia.nombre} a ${obtenerTextoEstado(nuevoEstado)} porque ${listaFormateada} necesita${nombres.length > 1 ? 'n' : ''} tenerla ${nuevoEstado === 'regular' ? 'regular o aprobada' : 'aprobada'}.`;
 }
 
+function obtenerDisponibilidadMateria(materiaId) {
+  const materia = obtenerMateriaPorId(materiaId);
+
+  if (!materia) {
+    return { clase: '', titulo: '', detalle: '' };
+  }
+
+  const estadoActual = estadosAcademicos[materiaId] || 'no-cursada';
+  const correlativas = obtenerCorrelativas(materia);
+  const faltantesParaCursar = obtenerCorrelativasFaltantes(materiaId, 'cursar');
+  const faltantesParaAprobar = obtenerCorrelativasFaltantes(materiaId, 'aprobar');
+  const nombresFaltantesParaCursar = faltantesParaCursar
+    .map((id) => obtenerMateriaPorId(id)?.nombre || id)
+    .filter(Boolean);
+  const nombresFaltantesParaAprobar = faltantesParaAprobar
+    .map((id) => obtenerMateriaPorId(id)?.nombre || id)
+    .filter(Boolean);
+
+  if (estadoActual === 'aprobada') {
+    return { clase: '', titulo: '', detalle: '' };
+  }
+
+  if (estadoActual === 'regular') {
+    if (!faltantesParaAprobar.length) {
+      return { clase: 'habilitada', titulo: '✓ Habilitada para aprobar', detalle: '' };
+    }
+
+    return {
+      clase: 'pendiente',
+      titulo: 'Regular',
+      detalle: `Para aprobar falta: ${formatearListaNombres(nombresFaltantesParaAprobar)}`
+    };
+  }
+
+  if (!correlativas.length) {
+    return { clase: 'habilitada', titulo: '✓ Sin correlativas pendientes', detalle: '' };
+  }
+
+  if (faltantesParaCursar.length) {
+    return {
+      clase: 'bloqueada',
+      titulo: '🔒 Bloqueada para cursar',
+      detalle: `Falta regularizar: ${formatearListaNombres(nombresFaltantesParaCursar)}`
+    };
+  }
+
+  if (faltantesParaAprobar.length) {
+    return {
+      clase: 'habilitada',
+      titulo: '✓ Habilitada para cursar',
+      detalle: `Para aprobar falta: ${formatearListaNombres(nombresFaltantesParaAprobar)}`
+    };
+  }
+
+  return { clase: 'habilitada', titulo: '✓ Habilitada para cursar y aprobar', detalle: '' };
+}
+
+function actualizarDisponibilidadEnTarjetas() {
+  const tarjetas = document.querySelectorAll('.materia-card');
+
+  tarjetas.forEach((tarjeta) => {
+    const idMateria = tarjeta.dataset.materiaId;
+    const disponibilidad = obtenerDisponibilidadMateria(idMateria);
+    const indicador = tarjeta.querySelector('.disponibilidad-indicador');
+
+    if (!indicador) {
+      return;
+    }
+
+    indicador.className = `disponibilidad-indicador ${disponibilidad.clase || ''}`.trim();
+    indicador.innerHTML = '';
+
+    if (disponibilidad.titulo) {
+      const titulo = document.createElement('span');
+      titulo.className = 'disponibilidad-titulo';
+      titulo.textContent = disponibilidad.titulo;
+      indicador.appendChild(titulo);
+    }
+
+    if (disponibilidad.detalle) {
+      const detalle = document.createElement('span');
+      detalle.className = 'disponibilidad-detalle';
+      detalle.textContent = disponibilidad.detalle;
+      indicador.appendChild(detalle);
+    }
+  });
+}
+
 function mostrarMensajeValidacion(mensaje) {
   let contenedor = document.getElementById('mensaje-validacion');
 
@@ -153,10 +295,7 @@ function puedeCambiarEstado(materiaId, nuevoEstado) {
   const correlativas = Array.isArray(materia.correlativas) ? materia.correlativas : [];
 
   if (nuevoEstado === 'regular') {
-    const faltantes = correlativas.filter((correlativaId) => {
-      const estadoCorrelativa = estadosAcademicos[correlativaId];
-      return !['regular', 'aprobada'].includes(estadoCorrelativa);
-    });
+    const faltantes = obtenerCorrelativasFaltantes(materiaId, 'cursar');
 
     if (faltantes.length) {
       return {
@@ -168,9 +307,7 @@ function puedeCambiarEstado(materiaId, nuevoEstado) {
   }
 
   if (nuevoEstado === 'aprobada') {
-    const faltantes = correlativas.filter((correlativaId) => {
-      return estadosAcademicos[correlativaId] !== 'aprobada';
-    });
+    const faltantes = obtenerCorrelativasFaltantes(materiaId, 'aprobar');
 
     if (faltantes.length) {
       return {
@@ -209,7 +346,7 @@ function puedeCambiarEstado(materiaId, nuevoEstado) {
 }
 
 function actualizarEstadoMateria(idMateria, nuevoEstado) {
-  if (!estadosAcademicos[idMateria]) {
+  if (!estadosAcademicos[idMateria] && idMateria !== undefined) {
     return;
   }
 
@@ -246,6 +383,8 @@ function actualizarEstadoMateria(idMateria, nuevoEstado) {
     boton.classList.toggle('active', esActivo);
     boton.setAttribute('aria-pressed', String(esActivo));
   });
+
+  actualizarDisponibilidadEnTarjetas();
 }
 
 function renderizarMaterias(materias) {
@@ -276,6 +415,15 @@ function renderizarMaterias(materias) {
             materia.tipo !== 'obligatoria'
               ? `<span class="materia-tipo ${materia.tipo}">${materia.tipo}</span>`
               : '';
+          const disponibilidad = obtenerDisponibilidadMateria(materia.id);
+          const disponibilidadHtml = disponibilidad.titulo || disponibilidad.detalle
+            ? `
+              <div class="disponibilidad-indicador ${disponibilidad.clase || ''}">
+                ${disponibilidad.titulo ? `<span class="disponibilidad-titulo">${disponibilidad.titulo}</span>` : ''}
+                ${disponibilidad.detalle ? `<span class="disponibilidad-detalle">${disponibilidad.detalle}</span>` : ''}
+              </div>
+            `
+            : '';
 
           return `
             <article
@@ -296,6 +444,7 @@ function renderizarMaterias(materias) {
               <div class="estado-actual">
                 ${obtenerTextoEstado(estadoActual)}
               </div>
+              ${disponibilidadHtml}
             </article>
           `;
         })
@@ -313,6 +462,7 @@ function renderizarMaterias(materias) {
     .join('');
 
   contenedor.innerHTML = seccionesHTML;
+  actualizarDisponibilidadEnTarjetas();
 
   contenedor.querySelectorAll('.estado-btn').forEach((boton) => {
     boton.addEventListener('click', (event) => {
