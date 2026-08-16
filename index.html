@@ -4,12 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Career Progress</title>
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem('career-progress-theme');
+        const theme = savedTheme === 'dark' ? 'dark' : 'light';
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
     <header class="site-header">
-      <h1>Progreso de la carrera</h1>
-      <p>Ingeniería en Informática — Plan 2025</p>
+      <div class="header-inner">
+        <div class="header-text">
+          <h1>Progreso de la carrera</h1>
+          <p>Ingeniería en Informática — Plan 2025</p>
+        </div>
+
+        <button id="theme-toggle" type="button" aria-label="Cambiar tema">🌙 Oscuro</button>
+      </div>
     </header>
 
     <div id="dashboard-container" class="dashboard-container" aria-live="polite"></div>

@@ -16,7 +16,50 @@ async function cargarMaterias() {
 
 const estadosAcademicos = {};
 const STORAGE_KEY = 'career-progress-estados';
+const THEME_STORAGE_KEY = 'career-progress-theme';
 let materiasDelPlan = [];
+
+function aplicarTema(tema) {
+  const temaNormalizado = tema === 'dark' ? 'dark' : 'light';
+  document.documentElement.dataset.theme = temaNormalizado;
+
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, temaNormalizado);
+  } catch (error) {
+    console.error('Error al guardar el tema:', error);
+  }
+
+  const toggle = document.getElementById('theme-toggle');
+
+  if (!toggle) {
+    return;
+  }
+
+  toggle.textContent = temaNormalizado === 'dark' ? '☀️ Claro' : '🌙 Oscuro';
+  toggle.setAttribute('aria-label', temaNormalizado === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+}
+
+function inicializarTema() {
+  try {
+    const temaGuardado = localStorage.getItem(THEME_STORAGE_KEY);
+    const tema = temaGuardado === 'dark' || temaGuardado === 'light' ? temaGuardado : 'light';
+    aplicarTema(tema);
+  } catch (error) {
+    console.error('Error al leer el tema guardado:', error);
+    aplicarTema('light');
+  }
+
+  const toggle = document.getElementById('theme-toggle');
+
+  if (!toggle) {
+    return;
+  }
+
+  toggle.addEventListener('click', () => {
+    const temaActual = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+    aplicarTema(temaActual === 'dark' ? 'light' : 'dark');
+  });
+}
 
 function obtenerTextoEstado(estado) {
   switch (estado) {
@@ -547,6 +590,8 @@ function renderizarMaterias(materias) {
     });
   });
 }
+
+inicializarTema();
 
 cargarMaterias()
   .then((materias) => {
