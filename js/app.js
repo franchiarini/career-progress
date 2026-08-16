@@ -20,6 +20,8 @@ let materiasDelPlan = [];
 
 function obtenerTextoEstado(estado) {
   switch (estado) {
+    case 'en-curso':
+      return 'En curso';
     case 'regular':
       return 'Regular';
     case 'aprobada':
@@ -146,6 +148,12 @@ function construirMensajeCorrelativas(materia, nuevoEstado, faltantes) {
       : `Para aprobar ${materia.nombre} necesitás tener aprobadas:\n${listaFormateada}.`;
   }
 
+  if (nuevoEstado === 'en-curso') {
+    return faltantes.length === 1
+      ? `Para cursar ${materia.nombre} necesitás tener regular o aprobada: ${listaFormateada}.`
+      : `Para cursar ${materia.nombre} necesitás tener regular o aprobada:\n${listaFormateada}.`;
+  }
+
   return faltantes.length === 1
     ? `Para regularizar ${materia.nombre} necesitás tener regular o aprobada: ${listaFormateada}.`
     : `Para regularizar ${materia.nombre} necesitás tener regular o aprobada:\n${listaFormateada}.`;
@@ -159,7 +167,11 @@ function construirMensajeDependencias(materia, nuevoEstado, dependientes) {
     return `No podés cambiar ${materia.nombre} a No cursada porque invalidaría:\n${listaFormateada}.`;
   }
 
-  return `No podés cambiar ${materia.nombre} a ${obtenerTextoEstado(nuevoEstado)} porque ${listaFormateada} necesita${nombres.length > 1 ? 'n' : ''} tenerla ${nuevoEstado === 'regular' ? 'regular o aprobada' : 'aprobada'}.`;
+  const requisitoTexto = nuevoEstado === 'regular' || nuevoEstado === 'en-curso'
+    ? 'regular o aprobada'
+    : 'aprobada';
+
+  return `No podés cambiar ${materia.nombre} a ${obtenerTextoEstado(nuevoEstado)} porque ${listaFormateada} necesita${nombres.length > 1 ? 'n' : ''} tenerla ${requisitoTexto}.`;
 }
 
 function obtenerDisponibilidadMateria(materiaId) {
@@ -194,6 +206,30 @@ function obtenerDisponibilidadMateria(materiaId) {
       titulo: 'Regular',
       detalle: `Para aprobar falta: ${formatearListaNombres(nombresFaltantesParaAprobar)}`
     };
+  }
+
+  if (estadoActual === 'en-curso') {
+    if (!correlativas.length) {
+      return { clase: 'habilitada', titulo: '✓ Sin correlativas pendientes', detalle: '' };
+    }
+
+    if (faltantesParaCursar.length) {
+      return {
+        clase: 'bloqueada',
+        titulo: '🔒 Bloqueada para cursar',
+        detalle: `Falta regularizar: ${formatearListaNombres(nombresFaltantesParaCursar)}`
+      };
+    }
+
+    if (faltantesParaAprobar.length) {
+      return {
+        clase: 'habilitada',
+        titulo: '✓ Habilitada para cursar',
+        detalle: `Para aprobar falta: ${formatearListaNombres(nombresFaltantesParaAprobar)}`
+      };
+    }
+
+    return { clase: 'habilitada', titulo: '✓ Habilitada para cursar y aprobar', detalle: '' };
   }
 
   if (!correlativas.length) {
@@ -260,6 +296,7 @@ function actualizarDashboard() {
   const totalMaterias = materiasDelPlan.length;
   const aprobadas = Object.values(estadosAcademicos).filter((estado) => estado === 'aprobada').length;
   const regulares = Object.values(estadosAcademicos).filter((estado) => estado === 'regular').length;
+  const enCurso = Object.values(estadosAcademicos).filter((estado) => estado === 'en-curso').length;
   const noCursadas = Object.values(estadosAcademicos).filter((estado) => estado === 'no-cursada').length;
   const porcentaje = totalMaterias ? Math.round((aprobadas / totalMaterias) * 100) : 0;
 
@@ -277,6 +314,7 @@ function actualizarDashboard() {
       <div class="dashboard-stats">
         <div class="stat-item"><span>Aprobadas:</span> <strong>${aprobadas}</strong></div>
         <div class="stat-item"><span>Regulares:</span> <strong>${regulares}</strong></div>
+        <div class="stat-item"><span>En curso:</span> <strong>${enCurso}</strong></div>
         <div class="stat-item"><span>No cursadas:</span> <strong>${noCursadas}</strong></div>
         <div class="stat-item"><span>Total:</span> <strong>${totalMaterias}</strong></div>
       </div>
@@ -307,7 +345,7 @@ function inicializarEstados(materias) {
 
   materias.forEach((materia) => {
     const estadoGuardado = estadosGuardados[materia.id];
-    const estadoValido = ['no-cursada', 'regular', 'aprobada'].includes(estadoGuardado)
+    const estadoValido = ['no-cursada', 'en-curso', 'regular', 'aprobada'].includes(estadoGuardado)
       ? estadoGuardado
       : 'no-cursada';
 
@@ -328,7 +366,7 @@ function puedeCambiarEstado(materiaId, nuevoEstado) {
 
   const correlativas = Array.isArray(materia.correlativas) ? materia.correlativas : [];
 
-  if (nuevoEstado === 'regular') {
+  if (nuevoEstado === 'regular' || nuevoEstado === 'en-curso') {
     const faltantes = obtenerCorrelativasFaltantes(materiaId, 'cursar');
 
     if (faltantes.length) {
@@ -401,7 +439,7 @@ function actualizarEstadoMateria(idMateria, nuevoEstado) {
   }
 
   tarjeta.dataset.estado = nuevoEstado;
-  tarjeta.classList.remove('no-cursada', 'regular', 'aprobada');
+  tarjeta.classList.remove('no-cursada', 'en-curso', 'regular', 'aprobada');
   tarjeta.classList.add(nuevoEstado);
 
   const estadoActual = tarjeta.querySelector('.estado-actual');
@@ -472,6 +510,7 @@ function renderizarMaterias(materias) {
 
               <div class="selector-estado" aria-label="Estado académico de ${materia.nombre}">
                 <button class="estado-btn ${estadoActual === 'no-cursada' ? 'active' : ''}" type="button" data-id="${materia.id}" data-estado="no-cursada" aria-pressed="${estadoActual === 'no-cursada'}">No cursada</button>
+                <button class="estado-btn ${estadoActual === 'en-curso' ? 'active' : ''}" type="button" data-id="${materia.id}" data-estado="en-curso" aria-pressed="${estadoActual === 'en-curso'}">En curso</button>
                 <button class="estado-btn ${estadoActual === 'regular' ? 'active' : ''}" type="button" data-id="${materia.id}" data-estado="regular" aria-pressed="${estadoActual === 'regular'}">Regular</button>
                 <button class="estado-btn ${estadoActual === 'aprobada' ? 'active' : ''}" type="button" data-id="${materia.id}" data-estado="aprobada" aria-pressed="${estadoActual === 'aprobada'}">Aprobada</button>
               </div>

@@ -10,6 +10,7 @@
   --border: #e2e8f0;
   --primary: #2563eb;
   --no-cursada: #94a3b8;
+  --en-curso: #38bdf8;
   --regular: #f59e0b;
   --aprobada: #22c55e;
   --bloqueada: #ef4444;
@@ -248,6 +249,12 @@ body {
   color: #ffffff;
 }
 
+.estado-btn[data-estado="en-curso"].active {
+  background: var(--en-curso);
+  border-color: var(--en-curso);
+  color: #ffffff;
+}
+
 .estado-btn[data-estado="regular"].active {
   background: var(--regular);
   border-color: var(--regular);
@@ -336,6 +343,10 @@ body {
   border-left: 4px solid var(--no-cursada);
 }
 
+.materia-card.en-curso {
+  border-left: 4px solid var(--en-curso);
+}
+
 .materia-card.regular {
   border-left: 4px solid var(--regular);
 }
@@ -346,6 +357,10 @@ body {
 
 .materia-card.no-cursada .estado-actual {
   color: #475569;
+}
+
+.materia-card.en-curso .estado-actual {
+  color: #0284c7;
 }
 
 .materia-card.regular .estado-actual {
