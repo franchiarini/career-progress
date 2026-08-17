@@ -306,24 +306,60 @@ body {
   background: var(--section-bg);
   border: 1px solid var(--border);
   border-radius: 18px;
-  padding: 22px;
+  padding: 0;
   box-shadow: 0 2px 12px rgba(15, 23, 42, 0.02);
+  overflow: hidden;
 }
 
-.anio-seccion h2 {
-  margin: 0 0 18px;
-  font-size: 1.3rem;
-  font-weight: 800;
+.anio-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 18px 22px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.anio-header:hover {
+  background: var(--surface-secondary);
+}
+
+.anio-toggle-icon {
+  font-size: 0.9rem;
+  color: var(--primary);
+  width: 16px;
+  display: inline-block;
+}
+
+.anio-titulo {
+  font-size: 1.2rem;
   letter-spacing: -0.02em;
-  color: var(--color-text);
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--color-border);
+}
+
+.anio-resumen {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 600;
 }
 
 .materias-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
+  padding: 22px;
+}
+
+.materias-grid[hidden] {
+  display: none;
 }
 
 .materia-card {
@@ -567,12 +603,21 @@ body {
     padding-bottom: 18px;
   }
 
-  .anio-seccion {
-    padding: 16px;
+  .anio-header {
+    padding: 16px 18px;
+  }
+
+  .anio-titulo {
+    font-size: 1.05rem;
+  }
+
+  .anio-resumen {
+    font-size: 0.72rem;
   }
 
   .materias-grid {
     grid-template-columns: 1fr;
+    padding: 16px;
   }
 
   .selector-estado {

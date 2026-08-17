@@ -18,6 +18,45 @@ const estadosAcademicos = {};
 const STORAGE_KEY = 'career-progress-estados';
 const THEME_STORAGE_KEY = 'career-progress-theme';
 let materiasDelPlan = [];
+const estadoSeccionesAnios = {};
+
+function esPantallaMovil() {
+  return window.matchMedia('(max-width: 640px)').matches;
+}
+
+function obtenerMateriasPorAnio(materias) {
+  const materiasPorAnio = {};
+
+  for (let anio = 1; anio <= 5; anio += 1) {
+    materiasPorAnio[anio] = [];
+  }
+
+  materias.forEach((materia) => {
+    if (materia.anio >= 1 && materia.anio <= 5) {
+      materiasPorAnio[materia.anio].push(materia);
+    }
+  });
+
+  return materiasPorAnio;
+}
+
+function obtenerEstadoSeccionInicial(anio, materiasDelAnio) {
+  if (estadoSeccionesAnios[anio] !== undefined) {
+    return estadoSeccionesAnios[anio];
+  }
+
+  if (esPantallaMovil()) {
+    const tieneEnCurso = materiasDelAnio.some((materia) => (estadosAcademicos[materia.id] || 'no-cursada') === 'en-curso');
+    return tieneEnCurso;
+  }
+
+  return true;
+}
+
+function obtenerResumenAnio(materiasDelAnio) {
+  const aprobadas = materiasDelAnio.filter((materia) => (estadosAcademicos[materia.id] || 'no-cursada') === 'aprobada').length;
+  return `${aprobadas} / ${materiasDelAnio.length} aprobadas`;
+}
 
 function aplicarTema(tema) {
   const temaNormalizado = tema === 'dark' ? 'dark' : 'light';
@@ -503,6 +542,29 @@ function actualizarEstadoMateria(idMateria, nuevoEstado) {
   actualizarDashboard();
 }
 
+function alternarAnio(boton) {
+  const seccion = boton.closest('.anio-seccion');
+
+  if (!seccion) {
+    return;
+  }
+
+  const anio = Number(seccion.dataset.anio);
+  const contenido = seccion.querySelector('.materias-grid');
+  const estabaAbierta = boton.getAttribute('aria-expanded') === 'true';
+  const vaAbierta = !estabaAbierta;
+  const icono = boton.querySelector('.anio-toggle-icon');
+
+  if (!contenido || !icono) {
+    return;
+  }
+
+  estadoSeccionesAnios[anio] = vaAbierta;
+  boton.setAttribute('aria-expanded', String(vaAbierta));
+  icono.textContent = vaAbierta ? '▼' : '▶';
+  contenido.hidden = !vaAbierta;
+}
+
 function renderizarMaterias(materias) {
   const contenedor = document.getElementById('malla-cursos');
 
@@ -510,20 +572,12 @@ function renderizarMaterias(materias) {
     return;
   }
 
-  const materiasPorAnio = {};
-
-  for (let anio = 1; anio <= 5; anio += 1) {
-    materiasPorAnio[anio] = [];
-  }
-
-  materias.forEach((materia) => {
-    if (materia.anio >= 1 && materia.anio <= 5) {
-      materiasPorAnio[materia.anio].push(materia);
-    }
-  });
+  const materiasPorAnio = obtenerMateriasPorAnio(materias);
 
   const seccionesHTML = Object.entries(materiasPorAnio)
     .map(([anio, materiasDelAnio]) => {
+      const anioNumero = Number(anio);
+      const estaAbierta = obtenerEstadoSeccionInicial(anioNumero, materiasDelAnio);
       const tarjetasHTML = materiasDelAnio
         .map((materia) => {
           const estadoActual = estadosAcademicos[materia.id] || 'no-cursada';
@@ -568,9 +622,19 @@ function renderizarMaterias(materias) {
         .join('');
 
       return `
-        <section class="anio-seccion" aria-label="${anio}° Año">
-          <h2>${anio}° Año</h2>
-          <div class="materias-grid">
+        <section class="anio-seccion" data-anio="${anioNumero}" aria-label="${anioNumero}° Año">
+          <button
+            class="anio-header"
+            type="button"
+            aria-expanded="${estaAbierta}"
+            aria-controls="anio-${anioNumero}-contenido"
+          >
+            <span class="anio-toggle-icon">${estaAbierta ? '▼' : '▶'}</span>
+            <span class="anio-titulo">${anioNumero}° Año</span>
+            <span class="anio-resumen">${obtenerResumenAnio(materiasDelAnio)}</span>
+          </button>
+
+          <div id="anio-${anioNumero}-contenido" class="materias-grid" ${estaAbierta ? '' : 'hidden'}>
             ${tarjetasHTML}
           </div>
         </section>
@@ -581,6 +645,16 @@ function renderizarMaterias(materias) {
   contenedor.innerHTML = seccionesHTML;
   actualizarDisponibilidadEnTarjetas();
   actualizarDashboard();
+
+  contenedor.addEventListener('click', (event) => {
+    const boton = event.target.closest('.anio-header');
+
+    if (!boton) {
+      return;
+    }
+
+    alternarAnio(boton);
+  });
 
   contenedor.querySelectorAll('.estado-btn').forEach((boton) => {
     boton.addEventListener('click', (event) => {
