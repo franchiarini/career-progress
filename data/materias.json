@@ -147,7 +147,7 @@
     "id": "taller-de-integracion-i",
     "codigo": "002247",
     "nombre": "Taller de Integración I",
-    "anio": 3,
+    "anio": 2,
     "tipo": "obligatoria",
     "correlativas": ["tecnicas-de-desarrollo", "ingenieria-de-requerimientos", "paradigmas-de-programacion-ii"]
   },
